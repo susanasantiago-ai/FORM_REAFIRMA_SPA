@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar Imágenes en Canvas con JavaScript</title>
+    <style>
+    
+    .flex-container {
+	display:flex;
+    justify-content:center;
+    background-color:#F0EADA;
+    }
+
+
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background-color: #F0EADA;
+            color: #3D300A;
+        }
+        
+         header {
+            background-color: #c1a084;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            box-shadow: 0 8px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3.2rem;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+            font-family:"Oswald", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #F7B2DA;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        /* Estilo para el canvas donde se dibujará la imagen */
+        canvas {
+            border: 5px solid #ccc;
+            border-radius: 8px;
+            background-color: #c1a084;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 100%;
+        }
+        .controles {
+            margin-top: 25px;
+            gap: 30px;
+			display: flex;
+				justify-content:center;
+			padding: 20px 0;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            background-color: #423003;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #c1a084;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+	
+ <header>
+        <h1>Reafirma Spa</h1>
+        <p>Tu lugar de bienestar</p>
+	 <p>Cuidar de tu piel y de ti, con profesionalismo, activos y aparatologia de ultima generación</p>
+    </header>
+    
+<h1 style="text-align: center;"> Elige tu facial</h1>
+
+  <div class="flex-container">
+  
+    
+
+
+    <!-- El elemento <canvas> de HTML5 es nuestro lienzo de dibujo -->
+    <canvas id="miCanvas" width="600" height="400">
+        Tu navegador no soporta el elemento canvas.
+    </canvas>
+</div>
+    <div class="controles">
+        <!-- Tres botones, cada uno con un ID único -->
+        <button id="btnfh">Facial Hidratante</button>
+        <button id="btnlp">Limpieza profunda</button>
+        <button id="btnage">Facial Anti edad</button>
+    </div>
+<script>
+	fetch(
+	
+	"https://script.google.com/macros/s/AKfycbzl8sUP93KFxMFC-wEgT6P9jPbosgns_mk1c0aR0Y6ucB674hf2yXhNA90b2XKU0oQ/exec"
+	)
+	
+	redirect:"follow",
+	metho:"POST",
+	body:"FormDataString",
+		headers:(
+			"Content-Type": "Text/Plain;charset=utf-8"
+		)
+	
+	</script>
+    <script>
+        // --- LÓGICA DE JAVASCRIPT ---
+
+        // 1. Obtenemos referencias a nuestros elementos HTML
+        const canvas = document.getElementById('miCanvas');
+        const context = canvas.getContext('2d'); // El contexto 2D es la API para dibujar
+
+        const btnfh = document.getElementById('btnfh');
+        const btnlp = document.getElementById('btnlp');
+        const btnage = document.getElementById('btnage');
+
+        // URLs de las imágenes que vamos a cargar
+        const urlfh = 'https://casaazulspa.mx/wp-content/uploads/2020/06/Hidratantes-Natural.png';
+        const urllp = 'https://clinicaalbaasensio.com/wp-content/uploads/2024/05/limpieza-facial-profesional-en-malaga-clinica-estetica.jpg';
+        const urlage= 'https://molacremas.com/cdn/shop/articles/antes-despues-retrato-mujer-madura-retocada.jpg?v=1684518482&width=2048';
+
+        /**
+         * Función que carga una imagen desde una URL y la dibuja en el canvas.
+         * @param {string} url - La dirección de la imagen a cargar.
+         */
+        function cargarImagenEnCanvas(url) {
+            const imagen = new Image(); // Creamos un nuevo objeto de imagen
+            imagen.src = url; // Le asignamos la URL
+
+            // Esperamos a que la imagen se cargue completamente antes de dibujarla
+            imagen.onload = () => {
+                // Limpiamos el canvas por si había una imagen anterior
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                // Dibujamos la nueva imagen, ajustándola al tamaño del canvas
+                context.drawImage(imagen, 0, 0, canvas.width, canvas.height);
+            };
+
+            // Manejo de errores por si la imagen no se puede cargar
+            imagen.onerror = () => {
+                console.error(`Error al cargar la imagen desde: ${url}`);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.font = "16px Arial";
+                context.fillStyle = "red";
+                context.fillText("No se pudo cargar la imagen.", 20, 40);
+            };
+        }
+
+        // 3. Asignamos los eventos de clic a cada botón
+        btnfh.addEventListener('click', () => {
+            cargarImagenEnCanvas(urlfh);
+        });
+
+        btnlp.addEventListener('click', () => {
+            cargarImagenEnCanvas(urllp);
+        });
+
+        btnage.addEventListener('click', () => {
+            cargarImagenEnCanvas(urlage);
+        });
+        
+        // Opcional: Mostramos un mensaje inicial en el canvas
+        context.font = "20px Arial";
+        context.textAlign = "center";
+        context.fillText("Selecciona un servicio", canvas.width / 2, canvas.height / 2);
+
+    </script>
+
+</body>
+	<br>
+	<form style="font-family: 'Gill Sans', 'Gill Sans MT', 'Myriad Pro', 'DejaVu Sans Condensed', Helvetica, Arial, 'sans-serif'; font-size:20px">
+		
+		<fieldset>
+			<legend> Datos Personales</legend>
+
+		
+		<label for="nombre" style="color: brown"> Nombre:</label>
+		<input type="text" id="nombre" name="usuario_nombre" placeholder="Tu nombre o nombres">
+		
+		<label for="apellidop"></label>
+		<input type="text" id="apellidop" name="usuario_apellido_p" placeholder="Apellido paterno">	
+		
+		<label for="apellidom"></label>
+		<input type="text" id="apellidom" name="usuario_apellido_m" placeholder="Apellido materno">
+		
+		<br>
+		<br>
+		
+		<label for="phone" style="color: brown">Telefono</label>
+		<input type="number" id="phone" name="usuario_phone" placeholder="10 caracteres">
+		</fieldset>
+		<div>
+	<br>
+			<label for="diag" style="color: brown">Diagnostico previo</label><br>
+			<textarea id="mensaje" name="usuario_mensaje" rows="3" cols="50"></textarea>
+		</div>
+		
+		<div>
+			<br>
+		
+		<label for="pass" style="color: brown" >Horario preferente de contacto</label><br> 
+			
+			
+			<input type="radio" id="op1" name="opcion_unica" value="a">
+			<label for="pass">Mañana</label>
+			
+			<input type="radio" id="op2" name="opcion_unica" value="b">
+			<label for="pass">Tarde</label>
+			
+			<input type="radio" id="op3" name="opcion_unica" value="c">
+			<label for="pass">Noche</label>
+		</div>
+		
+		<div>
+			<br>
+		<label for="pass" style="color: brown">Servicios de interes</label>
+			<br>
+			
+		
+		<input type="checkbox" id="tema1" name="intereses" value="reel">
+			<label for="tema1">Faciales</label>
+		<input type="checkbox" id="tema2" name="intereses" value="post">
+			<label for="tema2">Corporales</label>	
+		<input type="checkbox" id="tema3" name="intereses" value="video">
+			<label for="tema3">Depilación</label>
+		<input type="checkbox" id="tema4" name="intereses" value="video">
+			<label for="tema4">Holistico</label>
+		</div>
+		<div>
+			<br>
+		<label for="giro" style="color: brown" >Frecuencia requerida</label>
+			<select id="giro" name="usuario_giro">
+			
+			<option value="">Selecciona una</option>
+			<option value="doc">1 vez al mes</option>
+			<option value="venta">2 veces al mes</option>
+			<option value="prod">3 veces al mes</option>
+			<option value="prof">1 a la semana</option>
+			</select>
+			<br>
+		</div>
+		<div>
+				<button type="submit">ENVIAR</button>
+		</div>
+	</form>
+	
+</html>
+
